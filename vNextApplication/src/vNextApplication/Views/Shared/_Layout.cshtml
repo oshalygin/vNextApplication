@@ -3,46 +3,70 @@
 
 <head>
     <title>vNext Application - @ViewBag.Title</title>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/lib/bootswatch/yeti/bootstrap.min.css">
+    <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="~/css/site.css">
 </head>
 
 <body>
-<div id="sidebar">
-    <img class="headshot" src="~/img/profileImage.jpg" alt="headshot">
-    <span id="username">Oleg Shalygin</span>
-    <ul class="menu">
-        <li class="active">
-            <a asp-controller="App" asp-action="Index">Home</a>
-        </li>
-        <li>
-            <a asp-controller="App" asp-action="About">About</a>
-        </li>
-        <li>
-            <a asp-controller="App" asp-action="Contact">Contact</a>
-        </li>
-    </ul>
-</div>
-<div id="wrapper">
-    <div id="main">
-        <div>
-            <button id="sidebarToggle">Toggle Menu</button>
-        </div>
-
-        <div>
-            @RenderBody()
-        </div>
-
+    <div id="sidebar">
+        <img class="headshot" src="~/img/profileImage.jpg" alt="headshot">
+        <span id="username">Oleg Shalygin</span>
+        <ul class="nav">
+            <li class="active">
+                <a asp-controller="App" asp-action="Index">Home</a>
+            </li>
+            <li>
+                <a asp-controller="App" asp-action="About">About</a>
+            </li>
+            <li>
+                <a asp-controller="App" asp-action="Contact">Contact</a>
+            </li>
+        </ul>
     </div>
-    <footer>
-        &copy; 2015 vNext Application
-    </footer>
-</div>
 
-<script src="~/lib/jquery/dist/jquery.min.js" type="text/javascript"></script>
-<script src="~/js/site.js" type="text/javascript"></script>
+    <div id="wrapper">
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <button id="sidebarToggle" class="btn btn-primary">
+                            <i class="fa fa-angle-left"></i>
+                        </button>
+                    </li>
+                </ul>
+                <a asp-controller="App" asp-action="Index" class="navbar-brand"> &nbsp;vNextApplication</a>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" class="btn btn-sm btn-info"><i class="fa fa-save"></i> Save</a>
+                    </li>
+                    <li>
+                        <a href="#" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Print</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div id="main" class="container-fluid">
 
-@RenderSection("Scripts", false)
+            <div>
+                @RenderBody()
+            </div>
+
+        </div>
+        <footer class="container-fluid">
+            <div class="navbar navbar-inverse navbar-fixed-bottom">
+                <h4 class="text-info text-center">&copy; 2015 vNextApplication</h4>
+            </div>
+        </footer>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="~/js/site.js" type="text/javascript"></script>
+
+    @RenderSection("Scripts", false)
 
 </body>
 

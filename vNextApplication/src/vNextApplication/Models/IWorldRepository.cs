@@ -8,7 +8,8 @@ namespace vNextApplication.Models
         IEnumerable<Trip> GetAllTripsWithStops();
         void AddTrip(Trip newTrip);
         bool SaveAll();
-        Trip GetTripByName(string tripName);
-        void AddStop(Stop newStop, string tripName);
+        Trip GetTripByName(string tripName, string username);
+        void AddStop(Stop newStop, string username, string tripName);
+        IEnumerable<Trip> GetUserTripsWithStops(string name);
     }
 }

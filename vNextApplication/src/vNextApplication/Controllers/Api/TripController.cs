@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Net;
 using AutoMapper;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.Logging;
 using NuGet;
@@ -12,6 +13,7 @@ using vNextApplication.ViewModels;
 namespace vNextApplication.Controllers.Api
 {
     [Route("api/trips")]
+    [Authorize]
     public class TripController : Controller
     {
         private IWorldRepository _repository;
@@ -26,7 +28,9 @@ namespace vNextApplication.Controllers.Api
         [HttpGet("")]
         public JsonResult Get()
         {
-            var results = Mapper.Map<IEnumerable<TripViewModel>>(_repository.GetAllTripsWithStops());
+
+            var trips = _repository.GetUserTripsWithStops(User.Identity.Name);
+            var results = Mapper.Map<IEnumerable<TripViewModel>>(trips);
 
             return Json(results);
         }
@@ -39,6 +43,8 @@ namespace vNextApplication.Controllers.Api
                 if (ModelState.IsValid)
                 {
                     var newTrip = Mapper.Map<Trip>(vm);
+
+                    newTrip.UserName = User.Identity.Name;
 
                     _logger.LogInformation("Attempting to save a new trip");
                     _repository.AddTrip(newTrip);

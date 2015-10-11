@@ -1,5 +1,9 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
+using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Mvc;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
@@ -34,6 +38,32 @@ namespace vNextApplication
 
             services.AddLogging();
 
+            services.AddIdentity<WorldUser, IdentityRole>(configuration =>
+            {
+                configuration.User.RequireUniqueEmail = true;
+                configuration.Password.RequiredLength = 8;
+            })
+                .AddEntityFrameworkStores<WorldContext>();
+
+            services.ConfigureCookieAuthentication(config =>
+            {
+                config.LoginPath = "/Auth/Login";
+                config.Notifications = new CookieAuthenticationNotifications
+                {
+                    OnApplyRedirect = ctx =>
+                    {
+                        if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
+                        {
+                            ctx.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
+                        }
+                        else
+                        {
+                            ctx.Response.Redirect(ctx.RedirectUri);
+                        }
+                    }
+                };
+            });
+
             services.AddEntityFramework()
                 .AddSqlServer()
                 .AddDbContext<WorldContext>();
@@ -42,15 +72,15 @@ namespace vNextApplication
             services.AddTransient<WorldContextSeedData>();
             services.AddScoped<IWorldRepository, WorldRepository>();
             services.AddScoped<CoordinateService>();
-            
         }
 
-        public void Configure(IApplicationBuilder app, WorldContextSeedData seeder, ILoggerFactory loggerFactory)
+        public async void Configure(IApplicationBuilder app, WorldContextSeedData seeder, ILoggerFactory loggerFactory)
         {
-
             loggerFactory.AddDebug(LogLevel.Warning);
 
             app.UseStaticFiles();
+
+            app.UseIdentity();
 
             Mapper.Initialize(config =>
             {
@@ -65,8 +95,7 @@ namespace vNextApplication
                     template: "{controller}/{action}/{id?}",
                     defaults: new {controller = "App", action = "Index"});
             });
-
-            seeder.EnsureSeedData();
+            await seeder.EnsureSeedData();
         }
     }
 }

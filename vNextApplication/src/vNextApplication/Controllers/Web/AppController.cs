@@ -1,5 +1,6 @@
 using Microsoft.AspNet.Mvc;
 using System.Linq;
+using Microsoft.AspNet.Authorization;
 using vNextApplication.Models;
 using vNextApplication.Services;
 using vNextApplication.ViewModels;
@@ -18,6 +19,12 @@ namespace vNextApplication.Controllers.Web
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult Trips()
         {
             var trips = _repository.GetAllTrips();
 

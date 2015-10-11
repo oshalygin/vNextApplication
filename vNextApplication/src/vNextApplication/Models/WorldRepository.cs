@@ -7,7 +7,8 @@ using Microsoft.Framework.Logging;
 
 namespace vNextApplication.Models
 {
-    public class WorldRepository : IWorldRepository
+    public class
+        WorldRepository : IWorldRepository
     {
         private WorldContext _context;
         private ILogger<WorldRepository> _logger;
@@ -59,20 +60,38 @@ namespace vNextApplication.Models
             return _context.SaveChanges() > 0;
         }
 
-        public Trip GetTripByName(string tripName)
+        public Trip GetTripByName(string tripName, string username)
         {
             return _context.Trips
                 .Include(x => x.Stops)
+                .Where(x=>x.UserName==username)
                 .FirstOrDefault(x => x.Name == tripName);
-
         }
 
-        public void AddStop(Stop newStop, string tripName)
+        public void AddStop(Stop newStop, string username, string tripName)
         {
-            var theTrip = GetTripByName(tripName);
+            var theTrip = GetTripByName(tripName, username);
             newStop.Order = theTrip.Stops.Max(x => x.Order) + 1;
             theTrip.Stops.Add(newStop);
             _context.Stops.Add(newStop);
+        }
+
+        public IEnumerable<Trip> GetUserTripsWithStops(string name)
+        {
+            try
+            {
+                return _context.Trips
+                    .Include(x => x.Stops)
+                    .OrderBy(x => x.Name)
+                    .Where(x => x.UserName == name)
+                    .ToList();
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError("Could not get trips with stops from database", ex);
+                return null;
+            }
         }
     }
 }

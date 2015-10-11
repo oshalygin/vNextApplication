@@ -1,8 +1,10 @@
-﻿using Microsoft.Data.Entity;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Data.Entity;
+using Microsoft.Data.Entity.Storage;
 
 namespace vNextApplication.Models
 {
-    public class WorldContext: DbContext
+    public class WorldContext: IdentityDbContext<WorldUser>
     {
         public WorldContext()
         {

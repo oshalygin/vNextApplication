@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.Logging;
 using vNextApplication.Models;
@@ -13,6 +14,7 @@ using vNextApplication.ViewModels;
 namespace vNextApplication.Controllers.Api
 {
     [Route("api/trips/{tripName}/stops")]
+    [Authorize]
     public class StopController : Controller
     {
         private ILogger<StopController> _logger;
@@ -31,7 +33,7 @@ namespace vNextApplication.Controllers.Api
         {
             try
             {
-                var results = _repository.GetTripByName(tripName);
+                var results = _repository.GetTripByName(tripName, User.Identity.Name);
 
                 if (results == null)
                 {
@@ -71,7 +73,7 @@ namespace vNextApplication.Controllers.Api
                     newStop.Longitude = coordinateResult.Longitude;
                     newStop.Latitude = coordinateResult.Latitude;
 
-                    _repository.AddStop(newStop, tripName);
+                    _repository.AddStop(newStop, User.Identity.Name, tripName);
                     if (_repository.SaveAll())
                     {
                         Response.StatusCode = (int) HttpStatusCode.Created;

@@ -10,15 +10,19 @@
 <body>
     <div id="sidebar">
         <img class="headshot" src="img/profileImage.jpg" alt="headshot">
-        <span>Oleg Shalygin</span>
+        <span id="username">Oleg Shalygin</span>
         <ul class="menu">
             <li class="active"><a href="#">Home</a></li>
             <li><a href="#">About</a></li>
             <li><a href="#">Contact</a></li>
         </ul>
     </div>
-    <div class="wrapper">
+    <div id="wrapper">
         <div id="main">
+            <div>
+                <button id="sidebarToggle">Toggle Menu</button>
+            </div>
+
             <div>
                 <h2>vNext Application</h2>
                 <p>Served from webroot</p>
@@ -39,7 +43,8 @@
             &copy; 2015 vNext Application
         </footer>
     </div>
-
+    <script src="lib/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="js/site.js" type="text/javascript"></script>
 </body>
 
 </html>

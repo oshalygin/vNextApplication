@@ -1,1 +1,1 @@
-###This application is built to explore the new world in vNext.  
+This application is built to explore the new world in vNext.

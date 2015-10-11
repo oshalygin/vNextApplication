@@ -1,5 +1,8 @@
 {
   "AppSettings": {
     "SiteEmailAddress": "derplord@gmail.com"
-  }	
+  },
+  "Data": {
+    "WorldContextConnection":  "Server=.\\SQLEXPRESS;Database=vNextApplication;Trusted_Connection=true;MultipleActiveResultSets=true;"
+  }
 }

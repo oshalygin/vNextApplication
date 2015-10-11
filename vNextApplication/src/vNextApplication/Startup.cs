@@ -3,6 +3,8 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Framework.Logging;
+using vNextApplication.Models;
 using vNextApplication.Services;
 
 namespace vNextApplication
@@ -26,7 +28,17 @@ namespace vNextApplication
         {
             services.AddMvc();
 
+            services.AddLogging();
+
+            services.AddEntityFramework()
+                .AddSqlServer()
+                .AddDbContext<WorldContext>();
+
             services.AddScoped<IMailService, DebugMailService>();
+            services.AddTransient<WorldContextSeedData>();
+            services.AddScoped<IWorldRepository, WorldRepository>();
+
+
 
             //else
             //{
@@ -34,8 +46,11 @@ namespace vNextApplication
             //}
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, WorldContextSeedData seeder, ILoggerFactory loggerFactory)
         {
+
+            loggerFactory.AddDebug(LogLevel.Warning);
+
             app.UseStaticFiles();
 
             app.UseMvc(config =>
@@ -45,6 +60,8 @@ namespace vNextApplication
                     template: "{controller}/{action}/{id?}",
                     defaults: new {controller = "App", action = "Index"});
             });
+
+            seeder.EnsureSeedData();
         }
     }
 }

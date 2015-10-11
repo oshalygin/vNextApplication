@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
+﻿using AutoMapper;
+using Microsoft.AspNet.Builder;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
+using Newtonsoft.Json.Serialization;
 using vNextApplication.Models;
 using vNextApplication.Services;
+using vNextApplication.ViewModels;
 
 namespace vNextApplication
 {
@@ -26,7 +28,9 @@ namespace vNextApplication
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc()
+                .AddJsonOptions(
+                    x => x.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
             services.AddLogging();
 
@@ -37,13 +41,8 @@ namespace vNextApplication
             services.AddScoped<IMailService, DebugMailService>();
             services.AddTransient<WorldContextSeedData>();
             services.AddScoped<IWorldRepository, WorldRepository>();
-
-
-
-            //else
-            //{
-            //    services.AddScoped<IMailService, MailService>();
-            //}
+            services.AddScoped<CoordinateService>();
+            
         }
 
         public void Configure(IApplicationBuilder app, WorldContextSeedData seeder, ILoggerFactory loggerFactory)
@@ -52,6 +51,12 @@ namespace vNextApplication
             loggerFactory.AddDebug(LogLevel.Warning);
 
             app.UseStaticFiles();
+
+            Mapper.Initialize(config =>
+            {
+                config.CreateMap<Trip, TripViewModel>().ReverseMap();
+                config.CreateMap<Stop, StopViewModel>().ReverseMap();
+            });
 
             app.UseMvc(config =>
             {

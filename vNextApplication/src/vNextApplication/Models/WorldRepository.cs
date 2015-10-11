@@ -48,5 +48,31 @@ namespace vNextApplication.Models
                 return null;
             }
         }
+
+        public void AddTrip(Trip newTrip)
+        {
+            _context.Add(newTrip);
+        }
+
+        public bool SaveAll()
+        {
+            return _context.SaveChanges() > 0;
+        }
+
+        public Trip GetTripByName(string tripName)
+        {
+            return _context.Trips
+                .Include(x => x.Stops)
+                .FirstOrDefault(x => x.Name == tripName);
+
+        }
+
+        public void AddStop(Stop newStop, string tripName)
+        {
+            var theTrip = GetTripByName(tripName);
+            newStop.Order = theTrip.Stops.Max(x => x.Order) + 1;
+            theTrip.Stops.Add(newStop);
+            _context.Stops.Add(newStop);
+        }
     }
 }

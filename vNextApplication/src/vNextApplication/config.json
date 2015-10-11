@@ -1,8 +1,10 @@
 {
   "AppSettings": {
-    "SiteEmailAddress": "derplord@gmail.com"
+    "SiteEmailAddress": "derplord@gmail.com",
+    "BingKey": "AlDyege1_EK08MOD0x8LBJsS1A8E6SleGBh5_GKnxYlu1zJyYx-gg0i9HBYiScQs"
   },
   "Data": {
-    "WorldContextConnection":  "Server=.\\SQLEXPRESS;Database=vNextApplication;Trusted_Connection=true;MultipleActiveResultSets=true;"
+    "WorldContextConnection": "Server=.\\SQLEXPRESS;Database=vNextApplication;Trusted_Connection=true;MultipleActiveResultSets=true;"
   }
+  
 }
